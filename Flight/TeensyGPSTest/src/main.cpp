@@ -1,3 +1,5 @@
+// FOR ATP
+
 /* Useful Resources
  * MPU6050 Datasheet - https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf
  */
@@ -16,19 +18,22 @@
 #include <iostream>
 
 
+
+
+
 void writeToFile(char* fileName, String telem);
 
 #define SEALEVELPRESSURE_HPA (1013.2)
 
 //Setup Adafruit Ultimate GPS 
-//#define GPS_BAUD 9600 // GPS module baud rate. GP3906 defaults to 9600.
+#define GPS_BAUD 9600 // GPS module baud rate. GP3906 defaults to 9600.
 //#define ARDUINO_GPS_RX 7 // GPS TX, Arduino RX pin
 //#define ARDUINO_GPS_TX 8 // GPS RX, Arduino TX pin
 TinyGPSPlus tinyGPS; // Create a TinyGPSPlus object
 //SoftwareSerial ssGPS(ARDUINO_GPS_TX, ARDUINO_GPS_RX); // Create a SoftwareSerial
 
 //#define gpsPort ssGPS  // Alternatively, use Serial1 on the Leonardo
-// #define SerialMonitor Serial3
+//#define SerialMonitor Serial3
 
 /* TODOs:
  *  Create version without Serial (keep Serial1 & Serial2) prints before flight?
@@ -43,7 +48,7 @@ float GyroX, GyroY, GyroZ;
 float AccX, AccY, AccZ;
 float AngX, AngY, AngZ;
 double Temp, Pres;
-float BMPAlt, Lat, Lng;     
+float BMPAlt, Lat, Lng, altR;     
 double GPSAlt, GPSSpeed;    
 uint32_t Satellites;
 };
@@ -61,9 +66,11 @@ DataStructure DataPack;
 float altRate = 0;
 float prvAlt;
 unsigned long prvTime = 0;
+float altRateArr[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int counter = 0;
 
 
-int XBEE_INTERVAL = 100; // every __ ms
+unsigned int XBEE_INTERVAL = 100; // every __ ms
 unsigned long intervalTime = 0;
 
 
@@ -142,6 +149,7 @@ void setup() {
   DataPack.GPSAlt = 0;
   DataPack.GPSSpeed = 0;
   DataPack.Satellites = 0;
+  DataPack.altR = 0;
   Serial.println("INITIALIZATION AND SETUP COMPLETE");
 }
 
@@ -166,13 +174,25 @@ void loop() {
   DataPack.Temp = bmp.temperature;
   DataPack.Pres = (bmp.pressure/100);
   DataPack.BMPAlt = bmp.readAltitude(SEALEVELPRESSURE_HPA);
-  DataPack.Lat = 111;//(tinyGPS.location.lat(), 6);
-  DataPack.Lng = 222;//(tinyGPS.location.lng(), 6);
-  DataPack.GPSAlt = 333;//(tinyGPS.altitude.feet());
-  DataPack.GPSSpeed = 444;//(tinyGPS.speed.mph();
-  DataPack.Satellites = (uint32_t(timestamp));//(tinyGPS.satellites.value());
+  DataPack.Lat = (tinyGPS.location.lat(), 6);
+  DataPack.Lng = (tinyGPS.location.lng(), 6);
+  DataPack.GPSAlt = (tinyGPS.altitude.feet());
+  DataPack.GPSSpeed = (tinyGPS.speed.mph());
+  DataPack.Satellites = (tinyGPS.satellites.value());
 
-  altRate = 1000.0 * (DataPack.BMPAlt - prvAlt) / (millis() - prvTime);
+  if(counter>=20) {
+    counter = 0;
+  }
+  altRateArr[counter] = 1000.0 * (DataPack.BMPAlt - prvAlt) / (millis() - prvTime);
+  counter++;
+
+  altRate = 0;
+  for(int i = 0; i < 20; i++) {
+    altRate += altRateArr[i];
+  }
+  altRate /= 20;
+  DataPack.altR = altRate;
+
   prvTime = millis();
   
   
@@ -180,9 +200,9 @@ void loop() {
 
   
   if(millis() - intervalTime > XBEE_INTERVAL){
-     //Serial1.print ("FlaminHotMountainDew");
+     Serial1.print ("FlaminHotMountainDew");
      Serial1.write((byte*)&DataPack, sizeof(DataPack));
-     //Serial1.print ("V");
+     Serial1.print ("V");
      intervalTime = millis();
      //Serial.print("Data sent");
   }
@@ -206,7 +226,7 @@ void loop() {
   newTelem += String(bmp.temperature) + ',';
   newTelem += String(bmp.pressure) + ',';
   newTelem += String(bmp.readAltitude(SEALEVELPRESSURE_HPA)) + ',';
-  newTelem += String(altRate);  // in m/s
+  newTelem += String(DataPack.altR);  // in m/s
   newTelem += ',';
   newTelem += String(tinyGPS.altitude.feet()) + ',';
   newTelem += String(tinyGPS.speed.mph()) + ',';
@@ -220,20 +240,6 @@ void loop() {
     tinyGPS.encode(Serial5.read());
   }
 
-  //delay(100);
-
-  // Send data over XBee once every 10 loops
-//  if (loopIndex >= 3) {
-//    Serial1.println(newTelem);
-//    //Serial1.flush();
-//    loopIndex = -1; // Will be updated below to 0
-//  }
-//  ++loopIndex;
-
-  // unsigned short lordAvailable = Serial2.available();
-  // char lordTelem[lordAvailable];
-  // Serial2.readBytes(lordTelem, lordAvailable);
-  // writeToFile(lordFileName, (String)lordTelem + '\n');
 }
 
 void writeToFile(char* fileName, String telem) {
@@ -247,6 +253,7 @@ void writeToFile(char* fileName, String telem) {
     Serial.println("Error writing to " + (String)fileName + " on SD");
   }
 }
+
 
 
 
