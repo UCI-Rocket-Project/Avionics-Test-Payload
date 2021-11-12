@@ -45,12 +45,12 @@ Adafruit_BMP3XX bmp = Adafruit_BMP3XX();
   #pragma pack(push, 1)
 struct DataStructure {
 float GyroX, GyroY, GyroZ;
-float AccX, AccY, AccZ;
-float AngX, AngY, AngZ;
-double Temp, Pres;
-float BMPAlt, Lat, Lng, altR;     
-double GPSAlt, GPSSpeed;    
-uint32_t Satellites;
+  float AccX, AccY, AccZ;
+  float AngX, AngY, AngZ;
+  double Temp, Pres;
+  float BMPAlt, altR;     
+  double Lat, Lng, GPSAlt, GPSSpeed;    
+  uint32_t Satellites;
 };
   #pragma pack(pop)
 
@@ -174,8 +174,8 @@ void loop() {
   DataPack.Temp = bmp.temperature;
   DataPack.Pres = (bmp.pressure/100);
   DataPack.BMPAlt = bmp.readAltitude(SEALEVELPRESSURE_HPA);
-  DataPack.Lat = (tinyGPS.location.lat(), 6);
-  DataPack.Lng = (tinyGPS.location.lng(), 6);
+  DataPack.Lat = tinyGPS.location.lat();
+  DataPack.Lng = tinyGPS.location.lng();
   DataPack.GPSAlt = (tinyGPS.altitude.feet());
   DataPack.GPSSpeed = (tinyGPS.speed.mph());
   DataPack.Satellites = (tinyGPS.satellites.value());

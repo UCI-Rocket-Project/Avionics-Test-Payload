@@ -11,8 +11,8 @@ struct DataStructure {
   float AccX, AccY, AccZ;
   float AngX, AngY, AngZ;
   double Temp, Pres;
-  float BMPAlt, Lat, Lng, altR;    
-  double GPSAlt, GPSSpeed;   
+  float BMPAlt, altR;     
+  double Lat, Lng, GPSAlt, GPSSpeed;    
   uint32_t Satellites;
 }data;
 #pragma pack(pop)
@@ -80,14 +80,32 @@ void loop() {
   //Serial.println("Printing Data Pack: Size= "+(String)readCount);
   // Output data and packet rate.
    
-  Serial.print((String)data.GyroX + ',' + (String)data.GyroY + ',' + (String) data.GyroZ + ',') ;
-  Serial.print((String)data.AccX + ',' + (String)data.AccY + ',' + (String)data.AccZ + ',' );
+  String str;
+  str += ((String)data.AccX + ',' + (String)data.AccY + ',' + (String)data.AccZ + ',' );
+  str += ((String)data.AngX + ',' + (String)data.AngY + ',' + (String)data.AngZ + ',' );
+  str += ((String)data.Temp + ',' + (String)data.Pres + ',');
+  str += ((String)data.BMPAlt + ',' + (String)data.altR + ',' + String(data.Lat, 7) + ',' + String(data.Lng, 7) + ',' );
+  str += ((String)data.GPSAlt + ',' + (String)data.GPSSpeed + ',' );
+  str += ((String)data.Satellites + ',' + (String)pps );
+
+  //Serial.println(str.length());
+  //Serial.println("TEST");
+  if(str.length() <= 115){
+    Serial.println(str);
+  }
+  /*Serial.print((String)data.AccX + ',' + (String)data.AccY + ',' + (String)data.AccZ + ',' );
+  Serial.flush();
   Serial.print((String)data.AngX + ',' + (String)data.AngY + ',' + (String)data.AngZ + ',' );
+  Serial.flush();
   Serial.print((String)data.Temp + ',' + (String)data.Pres + ',');
-  Serial.print((String)data.BMPAlt + ',' + (String)data.altR + ',' + (String)data.Lat + ',' + (String)data.Lng + ',' );
+  Serial.flush();
+  Serial.print((String)data.BMPAlt + ',' + (String)data.altR + ',' + String(data.Lat, 7) + ',' + String(data.Lng, 7) + ',' );
+  Serial.flush();
   Serial.print( (String)data.GPSAlt + ',' + (String)data.GPSSpeed + ',' );
+  Serial.flush();
   Serial.print((String)data.Satellites + ',' + (String)pps );
-  Serial.println();
+  Serial.flush();
+  Serial.println();*/
 
 
 }
