@@ -47,6 +47,9 @@ void loop() {
         Serial.print("Pakcet Retreival Failure: ");
         Serial.println(checksum);
       }
+      Serial.print("Accuracy: ");
+      Serial.print((float)(success/count) * 100);
+      Serial.println("%");
       body = "";
     }
     else if(buffer[0] == '\t') {
