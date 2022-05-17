@@ -14,20 +14,21 @@ char buffer[1];
 char sentence[MAXSENTENCESIZE];
 String body;
 
-// SoftwareSerial Xbee(0, 1);
-
 void setup() {
-  // put your setup code here, to run once:
+  // Serial is Console/System
+  // Serial1 is Receving Input
+  // We have a baud rate of 115200
   Serial.begin(115200);
   Serial1.clear();
+  // Set the RX and TX pins
   Serial1.setRX(0);
   Serial1.setTX(1);
+  // Serial and Serial1 must have a consistent baud rate
   Serial1.begin(115200);
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   toRead = Serial1.available();
   
   if (toRead > 0) {
@@ -67,6 +68,8 @@ void loop() {
 
 }
 
+// Checksum Calculation for a string message and int divisor
+// Returns Checksum
 int checksumCalc(String message, int divisor) {
   int sum = 0;
   for(int i = 0; i < message.length(); i++){ sum += int(message[i]); }

@@ -1,12 +1,12 @@
 // Omar Hossain
 // Transmit.ino
 
+const int divisor = 32;
+
+byte checksum = 0;
 int iterations = 0;
 unsigned int sum = 0;
-
 String a = "It's Working";
-byte checksum = 0;
-const int divisor = 32;
 
 void setup() {
   // put your setup code here, to run once:
@@ -18,34 +18,29 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-//  delay(1000);
-  
-//  delay(100);
-//  Serial1.print('O');
-//  delay(100);
-  //  Serial1.print('H'); 
 
   ++iterations;
   if ( iterations == 10)
   {
     
+    // Running Sum of ASCII characters for one message
     for(int i = 0; i < a.length(); i++)
     { 
       sum += int(a[i]);
     }
     Serial.print("Checksum: ");
+    // Modulus with some Divisor to give Checksum
     Serial.println(sum%32);
     Serial1.print(a);
+    // Have an indicator for checksum after
     Serial1.print('\t');
+    // Checksum can only be 1 (or a set number) byte 
+    // More than that will cause issues
     checksum = byte(sum%divisor);
     Serial1.write(byte(checksum));
     sum = 0;
     iterations = 0;
   
   }
-  
-  
-    
   
  }
