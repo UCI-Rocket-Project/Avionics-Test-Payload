@@ -28,16 +28,16 @@ void loop() {
     { 
       sum += int(a[i]);
     }
-    Serial.print("Checksum: ");
+    // Checksum can only be 1 (or a set number) byte 
+    // More than that will cause issues
     // Modulus with some Divisor to give Checksum
-    Serial.println(sum%32);
+    checksum = byte(sum%divisor);
+    Serial.print("Checksum: ");
+    Serial.println(checksum);
     Serial1.print(a);
     // Have an indicator for checksum after
     Serial1.print('\t');
-    // Checksum can only be 1 (or a set number) byte 
-    // More than that will cause issues
-    checksum = byte(sum%divisor);
-    Serial1.write(byte(checksum));
+    Serial1.write(checksum);
     sum = 0;
     iterations = 0;
   
