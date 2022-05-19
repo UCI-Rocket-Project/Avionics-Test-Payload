@@ -6,6 +6,7 @@ const int DIVISOR = 32;
 
 bool checkReady = false;
 byte checksum = 0;
+byte checksum_cur = 0;
 unsigned int toRead = 0;
 unsigned int count = 0;
 unsigned int success = 0;
@@ -37,8 +38,9 @@ void loop() {
       count++;
       checkReady = false;
       checksum = byte(buffer[0]);
+      checksum_cur = checksumCalc(body, DIVISOR);
       
-      if(checksum == checksumCalc(body, DIVISOR)) {
+      if(checksum == checksum_cur) {
         success++;
         Serial.print("Packet Retreival Success: ");
         Serial.println(checksum);
@@ -46,10 +48,10 @@ void loop() {
       }
       else {
         Serial.print("Pakcet Retreival Failure: ");
-        Serial.println(checksum);
+        Serial.println(checksum_cur);
       }
       Serial.print("Accuracy: ");
-      Serial.print((float)(success/count) * 100);
+      Serial.print((float)( ((float)success)/((float)count)) * 100);
       Serial.println("%");
       body = "";
     }
