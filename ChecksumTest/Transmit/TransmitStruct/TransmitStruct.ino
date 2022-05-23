@@ -1,7 +1,6 @@
 // Omar Hossain
 // Transmit.ino
 
-#include <iostream>
 
 const int divisor = 32;
 
@@ -23,6 +22,7 @@ uint32_t Satellites;
 #pragma pack(pop)
 
 DataStructure testPack;
+byte * testPackByte;
 
 void setup() {
   // put your setup code here, to run once:
@@ -44,6 +44,8 @@ void setup() {
   testPack.GPSAlt = -89.123;
   testPack.GPSSpeed = 45.678;
   testPack.Satellites = 4;
+
+  testPackByte = (byte*)&testPack;
   
   Serial.begin(115200);
   Serial1.clear();
@@ -58,10 +60,10 @@ void loop() {
   if ( iterations == 10)
   {
     
-    // Running Sum of ASCII characters for one message
-    for(int i = 0; i < a.length(); i++)
+    // Running Sum of bytes for one message
+    for(int i = 0; i < sizeof(testPack); i++)
     { 
-      sum += int(a[i]);
+      sum += int(testPackByte[i]);
     }
     // Checksum can only be 1 (or a set number) byte 
     // More than that will cause issues
@@ -69,7 +71,11 @@ void loop() {
     checksum = byte(sum%divisor);
     Serial.print("Checksum: ");
     Serial.println(checksum);
-    Serial1.print(a);
+    // Serial1.print(testPack);
+    // Changed from print to write
+    // testPackByte is a byte Pointer array
+    // sizeof(testPack) gives the amount of bytes testPack is
+    Serial1.write(testPackByte, sizeof(testPack));
     // Have an indicator for checksum after
     Serial1.print('\t');
     Serial1.write(checksum);
