@@ -14,10 +14,10 @@ struct DataStructure {
 float GyroX, GyroY, GyroZ;
 float AccX, AccY, AccZ;
 float AngX, AngY, AngZ;
-double Temp, Pres;
-float BMPAlt, Lat, Lng;     
-double GPSAlt, GPSSpeed;    
-uint32_t Satellites;
+//double Temp, Pres;
+//float BMPAlt, Lat, Lng;     
+//double GPSAlt, GPSSpeed;    
+//uint32_t Satellites;
 };
 #pragma pack(pop)
 
@@ -36,14 +36,14 @@ void setup() {
   testPack.AngX = -45.678;
   testPack.AngY = 91.234;
   testPack.AngZ = -56.789;
-  testPack.Temp = 12.345;
-  testPack.Pres = -67.891;
-  testPack.BMPAlt = 23.456;
-  testPack.Lat = -78.912;
-  testPack.Lng = 34.567;
-  testPack.GPSAlt = -89.123;
-  testPack.GPSSpeed = 45.678;
-  testPack.Satellites = 4;
+//  testPack.Temp = 12.345;
+//  testPack.Pres = -67.891;
+//  testPack.BMPAlt = 23.456;
+//  testPack.Lat = -78.912;
+//  testPack.Lng = 34.567;
+//  testPack.GPSAlt = -89.123;
+//  testPack.GPSSpeed = 45.678;
+//  testPack.Satellites = 4;
 
   testPackByte = (byte*)&testPack;
   

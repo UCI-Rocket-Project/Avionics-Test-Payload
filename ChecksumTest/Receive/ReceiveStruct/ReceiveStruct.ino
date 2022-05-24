@@ -22,10 +22,10 @@ struct DataStructure {
   float GyroX, GyroY, GyroZ;
   float AccX, AccY, AccZ;
   float AngX, AngY, AngZ;
-  double Temp, Pres;
-  float BMPAlt, Lat, Lng;     
-  double GPSAlt, GPSSpeed;    
-  uint32_t Satellites;
+//  double Temp, Pres;
+//  float BMPAlt, Lat, Lng;     
+//  double GPSAlt, GPSSpeed;    
+//  uint32_t Satellites;
 };
 #pragma pack(pop)
 
@@ -85,22 +85,6 @@ void loop() {
         Serial.println(bodyPacket.AngY);
         Serial.print("AngZ: ");
         Serial.println(bodyPacket.AngZ);
-        Serial.print("Temp: ");
-        Serial.println(bodyPacket.Temp);
-        Serial.print("Pres: ");
-        Serial.println(bodyPacket.Pres);
-        Serial.print("BMPAlt: ");
-        Serial.println(bodyPacket.BMPAlt);
-        Serial.print("Lat: ");
-        Serial.println(bodyPacket.Lat);
-        Serial.print("Lng: ");
-        Serial.println(bodyPacket.Lng);
-        Serial.print("GPSAlt: ");
-        Serial.println(bodyPacket.GPSAlt);
-        Serial.print("GPSSpeed: ");
-        Serial.println(bodyPacket.GPSSpeed);
-        Serial.print("Satellites: ");
-        Serial.println(bodyPacket.Satellites);
       }
       else {
         Serial.print("Pakcet Retreival Failure: ");
