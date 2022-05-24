@@ -69,6 +69,7 @@ void loop() {
     // More than that will cause issues
     // Modulus with some Divisor to give Checksum
     checksum = byte(sum%divisor);
+    Serial.println(sizeof(testPack));
     Serial.print("Checksum: ");
     Serial.println(checksum);
     // Serial1.print(testPack);

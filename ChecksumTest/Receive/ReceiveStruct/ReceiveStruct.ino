@@ -61,6 +61,46 @@ void loop() {
         Serial.print("Packet Retreival Success: ");
         Serial.println(checksum);
         Serial.println(body);
+        Serial.println(sizeof(body));
+        // Copy the contents of body (a string of characters) to 
+        // bodyPacket, which is DataStructure
+        body.getBytes(sentence, 160);
+        memcpy(&bodyPacket, &sentence, 160);
+        Serial.println(sizeof(sentence));
+        Serial.print("GyroX: ");
+        Serial.println(bodyPacket.GyroX);
+        Serial.print("GyroY: ");
+        Serial.println(bodyPacket.GyroY);
+        Serial.print("GyroZ: ");
+        Serial.println(bodyPacket.GyroZ);
+        Serial.print("AccX: ");
+        Serial.println(bodyPacket.AccX);
+        Serial.print("AccY: ");
+        Serial.println(bodyPacket.AccY);
+        Serial.print("AccZ: ");
+        Serial.println(bodyPacket.AccZ);
+        Serial.print("AngX: ");
+        Serial.println(bodyPacket.AngX);
+        Serial.print("AngY: ");
+        Serial.println(bodyPacket.AngY);
+        Serial.print("AngZ: ");
+        Serial.println(bodyPacket.AngZ);
+        Serial.print("Temp: ");
+        Serial.println(bodyPacket.Temp);
+        Serial.print("Pres: ");
+        Serial.println(bodyPacket.Pres);
+        Serial.print("BMPAlt: ");
+        Serial.println(bodyPacket.BMPAlt);
+        Serial.print("Lat: ");
+        Serial.println(bodyPacket.Lat);
+        Serial.print("Lng: ");
+        Serial.println(bodyPacket.Lng);
+        Serial.print("GPSAlt: ");
+        Serial.println(bodyPacket.GPSAlt);
+        Serial.print("GPSSpeed: ");
+        Serial.println(bodyPacket.GPSSpeed);
+        Serial.print("Satellites: ");
+        Serial.println(bodyPacket.Satellites);
       }
       else {
         Serial.print("Pakcet Retreival Failure: ");
@@ -74,43 +114,6 @@ void loop() {
     else if(buffer[0] == '\t') {
       Serial.print("Message End Received, Body: ");
       Serial.println(body);
-      // Copy the contents of body (a string of characters) to 
-      // bodyPacket, which is DataStructure
-      memcpy(&bodyPacket, &body, sizeof(body));
-      Serial.print("GyroX: ");
-      Serial.println(bodyPacket.GyroX);
-      Serial.print("GyroY: ");
-      Serial.println(bodyPacket.GyroY);
-      Serial.print("GyroZ: ");
-      Serial.println(bodyPacket.GyroZ);
-      Serial.print("AccX: ");
-      Serial.println(bodyPacket.AccX);
-      Serial.print("AccY: ");
-      Serial.println(bodyPacket.AccY);
-      Serial.print("AccZ: ");
-      Serial.println(bodyPacket.AccZ);
-      Serial.print("AngX: ");
-      Serial.println(bodyPacket.AngX);
-      Serial.print("AngY: ");
-      Serial.println(bodyPacket.AngY);
-      Serial.print("AngZ: ");
-      Serial.println(bodyPacket.AngZ);
-      Serial.print("Temp: ");
-      Serial.println(bodyPacket.Temp);
-      Serial.print("Pres: ");
-      Serial.println(bodyPacket.Pres);
-      Serial.print("BMPAlt: ");
-      Serial.println(bodyPacket.BMPAlt);
-      Serial.print("Lat: ");
-      Serial.println(bodyPacket.Lat);
-      Serial.print("Lng: ");
-      Serial.println(bodyPacket.Lng);
-      Serial.print("GPSAlt: ");
-      Serial.println(bodyPacket.GPSAlt);
-      Serial.print("GPSSpeed: ");
-      Serial.println(bodyPacket.GPSSpeed);
-      Serial.print("Satellites: ");
-      Serial.println(bodyPacket.Satellites);
       checkReady = true;
     }
     else {
